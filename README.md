@@ -1,20 +1,23 @@
 # Production Agent Starter
 
-**Design the agent system before choosing the agent framework.**
+*Design AI agent systems with explicit architecture decisions and engineering constraints.*
 
-*A lightweight, framework-neutral reference for turning requirements into justified architecture decisions, editable diagrams, engineering constraints, and an implementation plan that a human or coding agent can review and execute.*
+Production Agent Starter is a framework-neutral architecture design toolkit for coding agents, engineers, and project owners. It turns system requirements into structured, reviewable **System Design Proposals**.
 
-> **Status — Documentation foundation.** This repository currently contains this design reference and [`AGENTS.md`](AGENTS.md). The reusable Skill, detailed decision guide, design template, tested examples, and runtime are **not yet shipped**. The diagrams below are *conceptual guidance*, not evidence of a working architecture generator or production deployment.
+It helps determine whether a problem calls for conventional software, a single bounded LLM call, a code-controlled workflow, or a bounded model-controlled agent. Each proposal records the rationale, alternatives, editable diagrams, applicable engineering policies, verification plans, and questions for human review.
 
 ## Why this project exists
 
-An agent framework can execute workflows, call tools, or coordinate models; it cannot decide whether your particular problem requires an autonomous agent in the first place. Beginning with an SDK too often obscures the actual engineering questions: which decisions should be deterministic, what the model may control, where authorization belongs, what failure looks like, and how the result will be tested.
+- **Architecture before framework.** Compare conventional software, a single bounded LLM call, a code-controlled workflow, and a model-controlled agent against the requirements before choosing an SDK.
+- **Explicit control boundaries.** Separate model-directed decisions from application-controlled execution, permissions, and termination.
+- **Production-minded engineering.** Address authorization, reliability, execution budgets, observability, failure handling, and verification during design.
+- **Reviewable architecture decisions.** Record rationale, alternatives, trade-offs, acceptance criteria, and questions for human approval.
 
-**Production Agent Starter addresses the design process, not the agent runtime.** Its intended users are engineers, project owners, and coding agents. It favors the simplest architecture that satisfies the stated requirements, including **no LLM**, **one model call**, or **framework-free Python** when appropriate.
+## What it produces
 
-The guiding principle is **Architecture first · Framework second · Model integration third · Verification always.**
+The reusable procedure in [`skills/agent-system-design/SKILL.md`](skills/agent-system-design/SKILL.md) guides a coding agent through requirements, architecture choices, and applicable engineering policies. Its output follows [`templates/SYSTEM_DESIGN.md`](templates/SYSTEM_DESIGN.md): a proposal with a control strategy, orchestration and operational design, alternatives, editable Mermaid diagrams, Policy ID assessments, proposed tests, evidence gaps, and decisions for human approval. The same procedure can be applied to each new requirement without changing repository files.
 
-### What it is—and is not
+### Scope and limits
 
 | This project guides | This project does not provide |
 | --- | --- |
@@ -24,102 +27,103 @@ The guiding principle is **Architecture first · Framework second · Model integ
 | Policies for tool use, failure handling, and verification | Certified security, production deployment, or compliance |
 | Coding-agent implementation handoff | A working universal scaffold/code generator |
 
-## Start here
+## Quick Start — design a system
 
-**Today:** Read this README and [`AGENTS.md`](AGENTS.md), then give your coding agent a concrete problem statement. The following workflow is a **manual, documented process**, not a command-line tool.
+1. **Clone or download.** On GitHub, use **Code → Download ZIP** and extract it, or copy the clone URL and run `git clone <repository-url>`.
+2. **Open the repository** in a coding-agent environment that can read its files. No installation or model API key is needed to use the documents. Instruction loading and Skill discovery vary by tool, so the prompt below names the public guidance explicitly.
+3. **Provide requirements.** Replace the prompt placeholders with a concrete system goal, users, data sources, external actions, and constraints. Mark unresolved facts **unknown**.
+4. **Review and approve the proposal.** Review the proposed architecture, challenge assumptions and selected patterns, resolve material unknowns, and check authorization and engineering-policy decisions. Approve the [System Design Proposal](templates/SYSTEM_DESIGN.md) or request revisions before implementation. The coding agent cannot approve its own proposal.
 
-1. Describe users, goals, success criteria, data sources, external actions, budget, latency, privacy, and deployment constraints. Mark unanswered questions as **unknown**, not false.
-2. Decide whether conventional code, a bounded LLM call, a deterministic workflow, or an agent-controlled tool loop is necessary.
-3. Compare at least one simpler alternative; select or compose control-flow and collaboration patterns.
-4. Define responsibilities, interfaces, trust boundaries, and failure behavior; draw editable diagrams.
-5. Select an implementation approach and model integration *after* the design is justified.
-6. Produce a reviewable design proposal with acceptance tests. **Approve it before writing code.**
+The proposal appears in the coding-agent conversation by default. Save it as Markdown only when the user explicitly requests a file and provides or approves its destination; do not create an arbitrary proposal file in the repository. This is a documented design workflow, not a command-line tool or automatic architecture selector.
 
 **Prompt to copy into a coding agent:**
 
 ```text
-Read README.md and AGENTS.md in Production Agent Starter.
+Read README.md and AGENTS.md in Production Agent Starter. Follow
+skills/agent-system-design/SKILL.md as the design procedure, whether or not
+your tool discovers Skills automatically. Consult docs/ARCHITECTURE_SELECTION.md
+and docs/ENGINEERING_POLICIES.md; use templates/SYSTEM_DESIGN.md for the output.
 Problem: [what I want to build]
 Users and data sources: [who/what]
 External actions: [read-only / write / unknown]
 Constraints: [budget, latency, security, deployment, skills]
 
-Design before implementing. Determine if an LLM or autonomous agent is needed.
-Compare the simplest viable solution with at least one alternative.
-Recommend architecture pattern(s), with reasons and revision triggers.
-Provide a Mermaid component diagram and an example request sequence.
-Document interfaces, trust boundaries, failures, verification, and open questions.
-Recommend framework-free or framework-based implementation separately from model choice.
-Clearly distinguish proposed, illustrative, verified, and unknown details.
-Stop for my approval before generating the application.
+Produce a System Design Proposal, not application code. Compare conventional
+software, one bounded LLM call, a code-controlled workflow, and a bounded
+model-controlled agent. Justify the control strategy, orchestration patterns,
+execution and operational design, simpler alternatives, and trade-offs.
+Include editable Mermaid component and request sequence diagrams, relevant
+Policy IDs with DESIGN-stage evidence gaps, proposed tests, and questions
+requiring my approval. Keep framework and model choices separate. Label
+known, assumed, unknown, proposed, and verified facts. Present the proposal
+in this conversation. Save a Markdown file only if I explicitly request one
+and provide or approve its destination. Stop for my review before implementation.
 ```
 
-## Diagram A — What this repository does
+### Diagram A — Repository workflow
 
-This is the **design-guidance workflow**, not a diagram of a runtime supplied by the repository.
+This diagram shows how repository instructions, design procedures, and engineering references support the proposal. It describes documentation guidance and responsibilities, not an executable runtime or mandatory sequential loading mechanism.
 
 ```mermaid
-flowchart TB
-    U[Human / Coding Agent] --> K[Production Agent Starter]
-    K --> R[Requirement Analysis]
-    R --> D[Architecture Decision Guide]
-    D --> S[System Design Specification]
-    P[Engineering Policies] --> S
-    S --> H[Implementation Handoff]
-    H --> F{Implementation Choice}
-    F --> PY[Framework-free Python]
-    F --> LC[LangChain]
-    F --> LG[LangGraph]
-    F -.-> O[Other SDKs - future]
-    PY --> M[Model / Tool Integrations]
-    LC --> M
-    LG --> M
-    O -.-> M
+flowchart LR
+    H[Human requirements] --> C[Coding agent]
+    C --> I[Repository instructions: AGENTS.md]
+    I --> S[Design Skill]
+    S --> A[Architecture selection guide]
+    S --> P[Engineering policies]
+    A --> D[System Design Proposal: template]
+    P --> D
+    D --> R[Human review and approval]
 ```
 
-The methods should remain framework-neutral. The **first planned hands-on example** will prioritize the open-source LangChain/LangGraph ecosystem; this is not a requirement imposed on users.
+The methods remain framework-neutral. The **first planned hands-on example** may use LangChain/LangGraph; this is not a requirement for users' designs.
+
+## Customization & Extensions
+
+[`AGENTS.md`](AGENTS.md) sets general repository working rules, the [design Skill](skills/agent-system-design/SKILL.md) defines the architecture procedure, and the [Engineering Policies](docs/ENGINEERING_POLICIES.md) define applicable control requirements. For your own project, you can add specialized guidance without changing those core documents:
+
+- Project instructions for coding style, language or framework preferences, testing, quality, and domain documentation.
+- Optional domain-specific Skills and tool-specific instruction files.
+- Formatter, linter, and test configurations for the development tools you use.
+
+For example, a Python project could state its formatting and pytest conventions in its own instructions and supply matching tool configuration. This repository does not ship those configurations. Codex, Claude Code, Gemini CLI, and other tools may load instructions and discover Skills differently; follow each tool's conventions and reference files explicitly when needed. A plugin is not required. Additional instructions or Skills cannot grant execution authority, bypass applicable policies, or replace human approval.
 
 ## Architecture selection
 
 Control flow, collaboration, technology, and model interfaces are **separate decisions**. Multiple patterns may coexist within one system; retrieval, memory, HITL, persistence, and observability are capabilities—not mutually exclusive agent topologies.
 
-### Diagram B — Architecture decision guide (preliminary)
+### Diagram B — Architecture decision guide (summary)
 
 ```mermaid
 flowchart TD
-    A[Requirements and constraints] --> B{LLM needed?}
-    B -->|No| C[Conventional software]
-    B -->|Yes| D{Must the LLM select actions or next steps?}
-    D -->|No| E{Multiple processing stages?}
-    E -->|No| F[Single LLM call]
-    E -->|Yes| G{Independent stages?}
-    G -->|Yes| H[Parallel workflow candidate]
-    G -->|No| I[Sequential workflow candidate]
-    D -->|Yes| J[Bounded tool-using agent candidate]
-    H --> K[Assess routing, evaluation and state needs]
+    A[Requirements and constraints] --> B{Conventional software sufficient?}
+    B -->|Yes| C[Conventional software candidate]
+    B -->|No| D{One bounded LLM call sufficient?}
+    D -->|Yes| E[Single bounded LLM call candidate]
+    D -->|No| F{Code-controlled workflow sufficient?}
+    F -->|Yes| G[Code-controlled workflow candidate]
+    F -->|No| H{Model-controlled action selection justified?}
+    H -->|Yes| I[Bounded model-controlled agent candidate]
+    H -->|No or unknown| J[Resolve gaps or revise assumptions]
+    C --> K[Layer 2: assess orchestration patterns]
+    E --> K
+    G --> K
     I --> K
-    J --> K
-    K --> L{Specialization or delegation justified?}
-    L -->|No| M[Keep minimal design]
-    L -->|Yes| N[Consider router / supervisor / handoff]
-    C --> O[Review constraints and trade-offs]
-    F --> O
-    M --> O
-    N --> O
+    K --> L[Layer 3: execution and operational design]
+    L --> M[Compare simpler alternatives and trade-offs]
+    M --> N[Human review]
+    J --> N
 ```
 
-**Important:** This tree is an *explanatory heuristic*, not an automatic selector. A deterministic workflow can call tools; tool use alone does not imply an autonomous agent. Parallelism, routing, and supervisor designs require independent justification based on task dependencies, quality evidence, latency, costs, tool permissions, and maintainability. A robust recommendation includes a simpler alternative and unresolved assumptions.
+**Important:** This is a reasoning heuristic, not an automatic selector. A code-controlled workflow may call models and tools; tool use alone does not imply a model-controlled agent. Layer 2 assesses patterns without requiring them, and Layer 3 does not require a graph runtime. Resolve material unknowns during review. The [detailed selection guide](docs/ARCHITECTURE_SELECTION.md) explains criteria, composition, and trade-offs.
 
 ### Pattern map
 
 | Layer | Options | Design question |
 | --- | --- | --- |
-| Baseline | Conventional logic; single LLM call | Do we need an agent at all? |
-| Model-driven execution | Bounded tool-using agent / ReAct | What may the model choose or invoke? |
-| Workflow | Sequential; parallel; router; evaluator–optimizer | Which steps are fixed, independent, conditional, or iterative? |
-| Planning and coordination | Plan-and-execute; orchestrator–worker; supervisor; handoff | Is delegation or dynamic planning justified? |
-| Stateful execution | Loop; custom graph; checkpoints | What must be resumed, interrupted, or persisted? |
-| Cross-cutting | Retrieval; memory; approval; tool policies; evaluation | What additional capabilities and safeguards are needed? |
+| 1. Control strategy | Conventional software; single bounded LLM call; code-controlled workflow; bounded model-controlled agent | Who selects the next step, and is a model needed? |
+| 2. Orchestration | Sequential; parallel; router; evaluator–optimizer; supervisor; handoff, when justified | How should stages or specialists coordinate? |
+| 3. Execution and operations | Ordinary code or graph representation; state, recovery, authorization, budgets, observability | How will the selected design run and fail safely? |
 
 Pattern names describe engineering approaches, not a single universal or exhaustive taxonomy. For research context, see [Anthropic: Building Effective Agents](https://www.anthropic.com/engineering/building-effective-agents) and [LangGraph: Workflows and Agents](https://docs.langchain.com/oss/python/langgraph/workflows-agents).
 
@@ -156,43 +160,28 @@ sequenceDiagram
     participant A as Application
     participant R as Agent Runtime
     participant L as LLM
+    participant P as Authorization / Tool Policies
     participant T as Approved Tool
     U->>A: Request
     A->>R: Validated input
     R->>L: Model request
     L-->>R: Tool call proposal
+    R->>P: Check identity, tool and arguments
+    P-->>R: Permit scoped call
     R->>T: Authorized, validated call
     T-->>R: Tool result
     R->>L: Tool result context
     L-->>R: Final answer
     R-->>A: Response
+    A->>A: Validate output
     A-->>U: Validated output
-```
-
-### Diagram D — How to generate and review the diagrams
-
-Mermaid output is not the deliverable on its own; it must agree with the text and the security model.
-
-```mermaid
-flowchart TD
-    A[Requirement Description] --> B[Extract Components / Constraints]
-    B --> C[Choose Architecture Pattern]
-    C --> D[Define Responsibilities]
-    D --> E[Define Interfaces and Data Flow]
-    E --> F[Generate Mermaid Diagram]
-    F --> G[Cross-check Diagram vs Specification]
-    G --> H{Consistent?}
-    H -->|No| I[Revise Design]
-    I --> D
-    H -->|Yes| J[Architecture Review]
-    J --> K[Implementation Handoff]
 ```
 
 **Diagram quality rule:** each important component must have a documented responsibility; trust boundaries and major external interfaces must be visible or explicitly described. Keep source diagrams editable. Do not pretend that a success-path sequence proves all failure paths are safe.
 
 ## Framework and model strategy
 
-This project recommends **architectures**, not mandatory SDKs. Framework-free Python is a valid option. LangChain/LangGraph is the preferred ecosystem for the *first example*, not a universal recommendation. Other agent SDKs may be discussed and evaluated later.
+This project recommends **architectures**, not mandatory SDKs. Framework-free implementation is a valid option. The *first example* may use LangChain/LangGraph; other SDKs may be evaluated later.
 
 LangChain and LangGraph are open source; hosted inference can still incur API costs. Supporting one model endpoint does not establish universal provider compatibility: tool calling, structured outputs, context limits, streaming, error semantics, and local model capabilities must be checked for the chosen combination.
 
@@ -206,22 +195,18 @@ LangChain and LangGraph are open source; hosted inference can still incur API co
 - **Verification:** separate deterministic tests, live-model evaluations, and deployment-specific security checks.
 - **Traceability:** tie critical decisions to requirements and acceptance criteria.
 
-## Project status and planned work
+## Roadmap
 
-| Deliverable | Status |
+| Milestone | Status |
 | --- | --- |
-| Public positioning, conceptual workflow, architecture diagrams | **Present — documentation** |
-| Root coding-agent instructions (`AGENTS.md`) | **Present** |
-| Detailed selection guide, pattern recipes, design template | **Planned** |
-| Reusable `SKILL.md` and Codex workflow | **Planned** |
-| Tested LangChain/LangGraph Jupyter example | **Planned** |
-| Runtime, code generator, UI, deployment platform | **Not provided** |
+| Architecture Design Toolkit | **Available** — documented guides, Skill, and proposal template; no tested automation |
+| Architecture Validation Cases | **Planned** — Simple FAQ, Multi-domain Customer Support, and Internal HR Assistant have not been run |
+| Executable Reference Examples | **Planned** — may use LangChain/LangGraph, with a separate offline path |
+| Production Engineering Extensions | **Future** — no runtime, code generator, UI, deployment platform, or production certification |
 
-Future examples should offer an offline deterministic path alongside clearly marked optional model API calls. No security certification or production-readiness claim is made.
+## Technical Foundations & References
 
-## Research and further reading
-
-This project synthesizes external work; the linked authors do not endorse this particular design methodology.
+The architecture methodology draws on established agent engineering patterns, software architecture principles, and production engineering practices. This repository organizes them into a requirement-driven design and review workflow.
 
 - [Anthropic — Building Effective Agents](https://www.anthropic.com/engineering/building-effective-agents)
 - [LangGraph — Workflows and Agents](https://docs.langchain.com/oss/python/langgraph/workflows-agents)
@@ -235,4 +220,4 @@ This project synthesizes external work; the linked authors do not endorse this p
 
 ## License
 
-**Not selected yet.** Apache-2.0 has been discussed, but the license must be explicitly chosen and added before public publication. Until then, public visibility alone does not grant broad reuse rights.
+Licensed under the Apache License, Version 2.0. See [LICENSE](LICENSE) for details.

@@ -1,32 +1,22 @@
 # Repository Guidance for Coding Agents
 
-This is a **public, intentionally short** entry point. It applies to Codex, Claude Code, and other coding agents working in this repository.
+## Purpose
 
-## Current phase
+This is the public repository-level entry point for coding agents. Read [`README.md`](README.md) for the toolkit's purpose and usage. Follow the public design procedure and references below even when your tool does not load them automatically.
 
-- The repository currently contains **documentation-only foundation files**.
-- Its primary product is **framework-neutral agent system-design guidance**.
-- Do not claim there is an executable runtime, tested notebook, code generator, or deployed product.
-- LangChain / LangGraph is the first *planned* example ecosystem; framework-free designs remain valid.
+Consumers may add project-specific instructions or Skills for coding style, testing, language and framework preferences, domain rules, or stricter quality controls. These supplement the baseline and cannot override applicable Engineering Policies, execution authorization, or required human approval.
 
-## Before changing anything
+## Design Workflow
 
-1. Read `README.md`, especially scope, project status, output contract, and engineering principles.
-2. **If present locally**, read `local note/CODEX_HANDOFF.md` and any specifically linked research notes. `local note/` contains private collaboration history and is Git-ignored; it is intentionally absent from public clones.
-3. If the local note is absent, use public files and ask the project owner for missing decisions rather than inventing their contents.
-4. Separate agreed project direction from research drafts, unverified assumptions, and planned features.
+1. Follow [`skills/agent-system-design/SKILL.md`](skills/agent-system-design/SKILL.md) to turn requirements into a design proposal.
+2. Consult [`docs/ARCHITECTURE_SELECTION.md`](docs/ARCHITECTURE_SELECTION.md) and [`docs/ENGINEERING_POLICIES.md`](docs/ENGINEERING_POLICIES.md) for architecture choices and applicable Policy IDs.
+3. Use [`templates/SYSTEM_DESIGN.md`](templates/SYSTEM_DESIGN.md) as the proposal structure; identify unresolved requirements and label material inputs known, assumed, or unknown.
+4. Record concise, reviewable rationale, alternatives, diagrams, applicable policies, evidence gaps, and proposed verification.
+5. Present the proposal for human review before substantial implementation. Do not approve your own design.
 
-## Repository boundaries
+## Operating Boundaries
 
-- Put polished, reviewed, reusable material intended for readers into public documents.
-- Put discussion logs, working thoughts, Codex handoffs, experiments and private planning into **`local note/`**, not `docs/`.
-- Never remove or override `.gitignore` rules that protect local notes or secrets.
-- Never publish `local note/` without explicit owner review; do not force-add ignored paths.
-- Do not expand into a custom agent framework, UI platform, model gateway, or full SDK adapter collection without approval.
-- Documentation, diagrams, code, and test claims must agree. Mark examples and future capabilities explicitly.
-
-## Expected change process
-
-Requirements -> architecture alternatives -> design decision -> editable Mermaid diagrams -> security/reliability constraints -> proposed tests -> approval -> implementation -> verification.
-
-Prefer small, reviewable changes. Report what was actually modified and tested, and what remains unverified. Do not push to GitHub without explicit authorization.
+- Respect repository ignore rules; do not disclose private or sensitive files.
+- Treat model-generated suggestions as proposals, not authorization. Follow applicable Engineering Policies and required human approvals before external actions.
+- Implement only an approved scope. Do not deploy, stage, commit, push, or publish without authorization.
+- Distinguish proposed behavior from verified implementation. Report changes, checks performed, and remaining verification gaps.
