@@ -2,7 +2,7 @@
 
 *Design AI agent systems with explicit architecture decisions and engineering constraints.*
 
-Production Agent Starter is a framework-neutral architecture design toolkit for coding agents, engineers, and project owners. It turns system requirements into structured, reviewable **System Design Proposals**.
+Production Agent Starter is a framework-neutral architecture design toolkit for coding agents, engineers, and project owners. It helps clarify incomplete requirements when needed and turns sufficiently understood requirements into reviewable **System Design Proposals**.
 
 It helps determine whether a problem calls for conventional software, a single bounded LLM call, a code-controlled workflow, or a bounded model-controlled agent. Each proposal records the rationale, alternatives, editable diagrams, applicable engineering policies, verification plans, and questions for human review.
 
@@ -15,72 +15,147 @@ It helps determine whether a problem calls for conventional software, a single b
 
 ## What it produces
 
-The reusable procedure in [`skills/agent-system-design/SKILL.md`](skills/agent-system-design/SKILL.md) guides a coding agent through requirements, architecture choices, and applicable engineering policies. Its output follows [`templates/SYSTEM_DESIGN.md`](templates/SYSTEM_DESIGN.md): a proposal with a control strategy, orchestration and operational design, alternatives, editable Mermaid diagrams, Policy ID assessments, proposed tests, evidence gaps, and decisions for human approval. The same procedure can be applied to each new requirement without changing repository files.
+- **Requirements Brief, when clarification is needed.** The [Requirements Clarification Skill](skills/requirements-clarification/SKILL.md) captures goals and users; functional, non-functional, and security requirements with stable IDs; scope and acceptance criteria; constraints and researched context; assumptions, unknowns, open decisions, readiness, and user confirmation status. Clear requirements can skip this process.
+- **System Design Proposal.** The [Agent System Design Skill](skills/agent-system-design/SKILL.md) follows the [System Design Template](templates/SYSTEM_DESIGN.md): three-layer architecture decisions including comparison of four control strategies, justified orchestration and execution choices, alternatives and trade-offs, module structure, component responsibilities and dependencies, interface/data/error contracts, editable Mermaid architecture and sequence diagrams, selective design-level pseudocode or illustrative code, engineering controls and applicable Policy IDs, proposed acceptance tests, evidence gaps, and implementation Work Packages with approval boundaries.
 
-### Scope and limits
+The proposal supports a subsequent coding agent's implementation planning. It is a reviewable design, not a working application, universal scaffold, tested deployment, production-readiness proof, or implementation authorization. Both procedures can be reused for new requirements without changing repository files.
 
-| This project guides | This project does not provide |
+## What you can do with Production Agent Starter
+
+| Capability | What you get |
 | --- | --- |
-| Requirements-to-architecture reasoning | A new orchestration engine or LLM gateway |
-| Workflow and agent pattern selection | Guaranteed universal pattern recommendations |
-| Editable, reviewable system-design diagrams | A finished drag-and-drop architecture builder |
-| Policies for tool use, failure handling, and verification | Certified security, production deployment, or compliance |
-| Coding-agent implementation handoff | A working universal scaffold/code generator |
+| Requirements Clarification | Turn incomplete ideas into structured requirements, acceptance criteria, and explicit open decisions. |
+| Architecture Decision-Making | Select the smallest justified architecture, from conventional software to bounded AI agents. |
+| System Design Proposals | Produce reviewable designs with component responsibilities, interfaces, data contracts, and editable diagrams. |
+| Production Engineering Considerations | Address security, authorization, reliability, observability, and failure handling during design. |
+| Implementation Handoff | Prepare implementation Work Packages and verification criteria for subsequent, explicitly authorized development. |
+
+> **Scope:** Production Agent Starter is a design-time toolkit, not an agent runtime or automatic code generator. It produces reviewable architecture proposals and implementation handoffs. Actual implementation, testing, and deployment are separate activities requiring appropriate authorization.
+
+## Repository Structure
+
+```text
+.
+├── README.md
+├── AGENTS.md
+├── LICENSE
+├── docs/
+│   ├── ARCHITECTURE_SELECTION.md
+│   └── ENGINEERING_POLICIES.md
+├── skills/
+│   ├── requirements-clarification/
+│   │   ├── SKILL.md
+│   │   └── README.md
+│   └── agent-system-design/
+│       ├── SKILL.md
+│       ├── README.md
+│       └── DESIGN.md
+└── templates/
+    └── SYSTEM_DESIGN.md
+```
+
+| Path | Responsibility |
+| --- | --- |
+| [README.md](README.md) | Developer-facing documentation and usage. |
+| [AGENTS.md](AGENTS.md) | Repository-level coding-agent instructions. |
+| [skills/](skills/) | Independent, reusable coding-agent procedures. |
+| [skills/requirements-clarification/](skills/requirements-clarification/) | Requirements clarification and the Requirements Brief. |
+| [skills/agent-system-design/](skills/agent-system-design/) | Architecture design and the System Design Proposal. |
+| [docs/](docs/) | Architecture selection methodology and engineering policies. |
+| [templates/](templates/) | Structured output contract for design proposals. |
+
+The two Skills are independently usable. Clarification is optional when requirements are sufficiently understood; those requirements can go directly to Agent System Design. When clarification is used, the Requirements Brief provides shared context for the design handoff.
 
 ## Quick Start — design a system
 
 1. **Clone or download.** On GitHub, use **Code → Download ZIP** and extract it, or copy the clone URL and run `git clone <repository-url>`.
 2. **Open the repository** in a coding-agent environment that can read its files. No installation or model API key is needed to use the documents. Instruction loading and Skill discovery vary by tool, so the prompt below names the public guidance explicitly.
-3. **Provide requirements.** Replace the prompt placeholders with a concrete system goal, users, data sources, external actions, and constraints. Mark unresolved facts **unknown**.
-4. **Review and approve the proposal.** Review the proposed architecture, challenge assumptions and selected patterns, resolve material unknowns, and check authorization and engineering-policy decisions. Approve the [System Design Proposal](templates/SYSTEM_DESIGN.md) or request revisions before implementation. The coding agent cannot approve its own proposal.
+3. **Share an idea or requirements.** Use the prompt below with what you know; leave other fields unspecified or write **UNKNOWN**. You do not need every requirement or a framework/model choice first. The agent checks actual scope, acceptance, and authority, clarifies material ambiguity, and skips an unnecessary interview when requirements are clear. You may request only a Requirements Brief.
+4. **Review the deliverables.** Confirm or correct a Requirements Brief when one is used. For a System Design Proposal, challenge assumptions and selected patterns, review material unknowns, and check authorization and engineering-policy decisions. An authorized human approves the design or requests revisions; the agent cannot self-approve. Implementation requires separate authorization of its scope.
 
-The proposal appears in the coding-agent conversation by default. Save it as Markdown only when the user explicitly requests a file and provides or approves its destination; do not create an arbitrary proposal file in the repository. This is a documented design workflow, not a command-line tool or automatic architecture selector.
+Both artifacts appear in the conversation by default. Save Markdown only when the user explicitly requests a file and provides or approves its destination; do not create arbitrary repository files. The Skills are documented procedures that agents can read directly, without a plugin, runtime, provider SDK, or automatic Skill invocation mechanism.
+
+When clarification is used, the Brief records one readiness state:
+
+| Requirements Readiness | Meaning for design handoff |
+| --- | --- |
+| READY_FOR_DESIGN | Requirements support architecture design without an unresolved central blocker. |
+| CONDITIONAL_FOR_DESIGN | A provisional proposal is defensible; affected decisions and permissions remain pending. |
+| NEEDS_CLARIFICATION | A fundamental blocker prevents a defensible design handoff; stop handoff and identify what must be clarified. |
+
+Readiness is separate from User Confirmation of intent. Neither state approves architecture or grants data access, action permissions, or implementation authority.
 
 **Prompt to copy into a coding agent:**
 
 ```text
-Read README.md and AGENTS.md in Production Agent Starter. Follow
-skills/agent-system-design/SKILL.md as the design procedure, whether or not
-your tool discovers Skills automatically. Consult docs/ARCHITECTURE_SELECTION.md
-and docs/ENGINEERING_POLICIES.md; use templates/SYSTEM_DESIGN.md for the output.
-Problem: [what I want to build]
-Users and data sources: [who/what]
-External actions: [read-only / write / unknown]
-Constraints: [budget, latency, security, deployment, skills]
+Read README.md and AGENTS.md in Production Agent Starter.
+Requested result: [System Design Proposal / Requirements Brief only]
+Idea or problem: [...]
+Intended users: [if known]
+Existing systems or data sources: [if known]
+External actions or permissions: [if known]
+Constraints: [if known; UNKNOWN or omitted fields are fine]
 
-Produce a System Design Proposal, not application code. Compare conventional
-software, one bounded LLM call, a code-controlled workflow, and a bounded
-model-controlled agent. Justify the control strategy, orchestration patterns,
-execution and operational design, simpler alternatives, and trade-offs.
-Include editable Mermaid component and request sequence diagrams, relevant
-Policy IDs with DESIGN-stage evidence gaps, proposed tests, and questions
-requiring my approval. Keep framework and model choices separate. Label
-known, assumed, unknown, proposed, and verified facts. Present the proposal
-in this conversation. Save a Markdown file only if I explicitly request one
-and provide or approve its destination. Stop for my review before implementation.
+Assess whether the actual requirements are sufficient. For material ambiguity,
+follow skills/requirements-clarification/SKILL.md: reuse supplied information,
+research authorized facts, ask focused questions, and produce a Requirements
+Brief for confirmation. Carry its IDs, evidence, assumptions, unknowns,
+readiness, and confirmation state forward. Skip unnecessary clarification
+when requirements are clear. If I request only a Brief, stop there.
+
+When I request design and a defensible design is possible, follow
+skills/agent-system-design/SKILL.md. Do not bypass NEEDS_CLARIFICATION.
+For a Brief marked CONDITIONAL_FOR_DESIGN, keep the architecture proposal
+provisional and carry pending decisions and permissions forward.
+Apply the methodology in docs/ARCHITECTURE_SELECTION.md, determine policy applicability, and follow all applicable requirements in docs/ENGINEERING_POLICIES.md.
+Use templates/SYSTEM_DESIGN.md as the proposal output contract, including
+architecture rationale, contracts, diagrams, controls, proposed tests,
+evidence gaps, and Work Packages for authorized human review.
+
+The proposal may contain concise, labeled pseudocode or illustrative code.
+Do not create application source files, generate a working scaffold, execute
+illustrative code, or begin implementation under this design request.
+Present outputs in this conversation; save Markdown only if I explicitly
+request a file and provide or approve its destination. Stop for human design
+review; implementation requires separate authorization.
 ```
 
-### Diagram A — Repository workflow
+### Diagram A — End-to-End User Workflow
 
-This diagram shows how repository instructions, design procedures, and engineering references support the proposal. It describes documentation guidance and responsibilities, not an executable runtime or mandatory sequential loading mechanism.
+This conceptual documentation workflow supports direct design or optional clarification. It does not represent an executable orchestrator or a fixed document-loading sequence.
 
 ```mermaid
-flowchart LR
-    H[Human requirements] --> C[Coding agent]
-    C --> I[Repository instructions: AGENTS.md]
-    I --> S[Design Skill]
-    S --> A[Architecture selection guide]
-    S --> P[Engineering policies]
-    A --> D[System Design Proposal: template]
-    P --> D
-    D --> R[Human review and approval]
+flowchart TD
+    U["User idea or requirements"] --> A["Coding agent"]
+    A --> Q{"Material ambiguity?"}
+    Q -->|No; design requested| D["Agent System Design"]
+    Q -->|Yes or clarification requested| C["Requirements Clarification"]
+    C --> B["Agent-produced Requirements Brief and readiness assessment"]
+    B --> H["User requirements review: confirm or correct; pending status retained"]
+    H -->|Corrections requested| C
+    H --> S{"Design requested?"}
+    S -->|No: Requirements Brief only| Z["Stop after Requirements Brief"]
+    S -->|Yes| T{"Requirements Readiness?"}
+    T -->|NEEDS_CLARIFICATION| X["Stop unsupported handoff; resolve blocker"]
+    X --> C
+    T -->|READY_FOR_DESIGN| D
+    T -->|CONDITIONAL_FOR_DESIGN; decisions and permissions pending| D
+    D --> P["System Design Proposal"]
+    P --> R{"Human Design Review"}
+    R -->|Revisions requested| D
+    R -->|Design approved| I{"Implementation authorized?"}
+    I -->|Yes, within authorized scope| M["Subsequent implementation"]
+    I -->|No| W["Await authorization"]
+    M --> V["Verification and observed evidence"]
 ```
+
+[`AGENTS.md`](AGENTS.md) supplies repository working rules. The [Architecture Selection Guide](docs/ARCHITECTURE_SELECTION.md) and [Engineering Policies](docs/ENGINEERING_POLICIES.md) support the design Skill; [`SYSTEM_DESIGN.md`](templates/SYSTEM_DESIGN.md) defines its output contract. Design approval leaves implementation authorization as a separate decision.
 
 The methods remain framework-neutral. The **first planned hands-on example** may use LangChain/LangGraph; this is not a requirement for users' designs.
 
 ## Customization & Extensions
 
-[`AGENTS.md`](AGENTS.md) sets general repository working rules, the [design Skill](skills/agent-system-design/SKILL.md) defines the architecture procedure, and the [Engineering Policies](docs/ENGINEERING_POLICIES.md) define applicable control requirements. For your own project, you can add specialized guidance without changing those core documents:
+[`AGENTS.md`](AGENTS.md) sets general working rules, [Requirements Clarification](skills/requirements-clarification/SKILL.md) structures incomplete requirements, [Agent System Design](skills/agent-system-design/SKILL.md) defines the architecture procedure, and the [Engineering Policies](docs/ENGINEERING_POLICIES.md) define applicable controls. For your own project, you can add specialized guidance without changing those core documents:
 
 - Project instructions for coding style, language or framework preferences, testing, quality, and domain documentation.
 - Optional domain-specific Skills and tool-specific instruction files.
@@ -129,7 +204,7 @@ Pattern names describe engineering approaches, not a single universal or exhaust
 
 ## From architecture choice to system design
 
-The output we want a coding agent to prepare is a **design proposal**, not a claim that software has been built. A useful proposal identifies requirements (including unknowns), the chosen pattern and alternatives, components and interfaces, model/tool integrations, trust boundaries, failures, quality gates, acceptance tests, implementation tasks, and conditions that would trigger redesign.
+The output we want a coding agent to prepare is a **design proposal**, not a claim that software has been built. A useful proposal identifies requirements (including unknowns), the chosen pattern and alternatives, module structure, components and contracts, model/tool integrations, trust boundaries, design-level logic, failures, acceptance tests, implementation Work Packages, and conditions that would trigger redesign.
 
 ### Diagram C — Example system architecture
 
@@ -199,7 +274,7 @@ LangChain and LangGraph are open source; hosted inference can still incur API co
 
 | Milestone | Status |
 | --- | --- |
-| Architecture Design Toolkit | **Available** — documented guides, Skill, and proposal template; no tested automation |
+| Architecture Design Toolkit | **Available — documentation**: Requirements Clarification Skill, Agent System Design Skill, guides, and proposal template; live-agent validation remains pending |
 | Architecture Validation Cases | **Planned** — Simple FAQ, Multi-domain Customer Support, and Internal HR Assistant have not been run |
 | Executable Reference Examples | **Planned** — may use LangChain/LangGraph, with a separate offline path |
 | Production Engineering Extensions | **Future** — no runtime, code generator, UI, deployment platform, or production certification |
