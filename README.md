@@ -275,7 +275,7 @@ LangChain and LangGraph are open source; hosted inference can still incur API co
 | Milestone | Status |
 | --- | --- |
 | Architecture Design Toolkit | **Available — documentation**: Requirements Clarification Skill, Agent System Design Skill, guides, and proposal template; live-agent validation remains pending |
-| Architecture Validation Cases | **Planned** — Simple FAQ, Multi-domain Customer Support, and Internal HR Assistant have not been run |
+| Architecture Validation Cases | **Planned** — scenario selection and live-agent validation are pending; no cases have been run |
 | Executable Reference Examples | **Planned** — may use LangChain/LangGraph, with a separate offline path |
 | Production Engineering Extensions | **Future** — no runtime, code generator, UI, deployment platform, or production certification |
 
